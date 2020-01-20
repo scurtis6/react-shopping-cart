@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import data from './data';
 
@@ -13,7 +13,14 @@ import CartContext from './contexts/CartContext';
 
 function App() {
 	const [products] = useState(data);
-	const [cart, setCart] = useState([]);
+	// const [cart, setCart] = useState([]);
+	const localCart = localStorage.getItem('cart');
+	const [cart, setCart] = useState(() => !localCart ? [] : localCart);
+
+	useEffect(() => {
+		localStorage.setItem("cart", JSON.stringify(cart));
+		}, [cart]);
+
 
 	const addItem = item => {
 		// add the given item to the cart
@@ -22,7 +29,9 @@ function App() {
 
 	const removeItem = itemID => {
 		setCart(cart.filter(item => item.id !== itemID));
-	}
+	};
+
+
 
 	return (
 		<div className="App">
